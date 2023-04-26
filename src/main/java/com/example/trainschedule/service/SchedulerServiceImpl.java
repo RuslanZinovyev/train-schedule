@@ -29,18 +29,21 @@ public class SchedulerServiceImpl implements ScheduleService {
     @Override
     @Cacheable("schedules")
     public Page<Schedule> findAll(Pageable pageable) {
+        log.info("Get all schedules on page = {}", pageable.getPageNumber());
         return scheduleRepository.findAll(pageable);
     }
 
     @Override
     @Cacheable("schedulesByLine")
     public List<Schedule> findByLine(String line) {
+        log.info("Fetching schedules from the database for line: {}", line);
         return scheduleRepository.findByLine(line);
     }
 
     @Override
     @Cacheable(value = "schedulesByLineAndDeparture", key = "#line + #departure")
     public Optional<Schedule> findByLineAndDeparture(String line, String departure) {
+        log.info("Fetching schedules from the database for line: {} and optional departute {}", line, departure);
         Integer convertedDeparture = timeConversionService.validateAndConvertDepartureTime(departure);
 
         if (convertedDeparture == null) {
