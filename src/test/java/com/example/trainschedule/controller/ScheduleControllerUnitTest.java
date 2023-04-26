@@ -1,6 +1,6 @@
 package com.example.trainschedule.controller;
 
-import com.example.trainschedule.model.Schedule;
+import com.example.trainschedule.entity.Schedule;
 import com.example.trainschedule.service.ScheduleService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

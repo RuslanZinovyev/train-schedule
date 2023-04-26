@@ -26,7 +26,7 @@ public class ScheduleControllerIntegrationTest {
 
     @Test
     public void getAllSchedules() throws Exception {
-        mockMvc.perform(get("/go-train/schedule")
+        mockMvc.perform(get("/go-train-api/v1/schedule")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -35,7 +35,7 @@ public class ScheduleControllerIntegrationTest {
 
     @Test
     public void getScheduleByLine() throws Exception {
-        mockMvc.perform(get("/go-train/schedule/Lakeshore")
+        mockMvc.perform(get("/go-train-api/v1/schedule/Lakeshore")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -44,14 +44,14 @@ public class ScheduleControllerIntegrationTest {
 
     @Test
     public void getScheduleByUnknownLine() throws Exception {
-        mockMvc.perform(get("/go-train/schedule/Unknown")
+        mockMvc.perform(get("/go-train-api/v1/schedule/Unknown")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void getScheduleByLineAndDepartureMilitaryFormat() throws Exception {
-        mockMvc.perform(get("/go-train/schedule/Lakeshore?departure=800")
+        mockMvc.perform(get("/go-train-api/v1/schedule/Lakeshore?departure=800")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -60,7 +60,7 @@ public class ScheduleControllerIntegrationTest {
 
     @Test
     public void getScheduleByLineAndDepartureLakeshore() throws Exception {
-        mockMvc.perform(get("/go-train/schedule/Lakeshore?departure=8:00am")
+        mockMvc.perform(get("/go-train-api/v1/schedule/Lakeshore?departure=8:00am")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -69,7 +69,7 @@ public class ScheduleControllerIntegrationTest {
 
     @Test
     public void getScheduleByLineAndDepartureKitchener() throws Exception {
-        mockMvc.perform(get("/go-train/schedule/Kitchener?departure=2:15pm")
+        mockMvc.perform(get("/go-train-api/v1/schedule/Kitchener?departure=2:15pm")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -78,7 +78,7 @@ public class ScheduleControllerIntegrationTest {
 
     @Test
     public void getScheduleByNonExistentLineAndDeparture() throws Exception {
-        mockMvc.perform(get("/go-train/schedule/NonExistentLine?departure=800")
+        mockMvc.perform(get("/go-train-api/v1/schedule/NonExistentLine?departure=800")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }

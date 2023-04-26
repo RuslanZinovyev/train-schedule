@@ -1,6 +1,6 @@
 package com.example.trainschedule.service;
 
-import com.example.trainschedule.model.Schedule;
+import com.example.trainschedule.entity.Schedule;
 import com.example.trainschedule.repository.ScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class SchedulerServiceImpl implements ScheduleService {
                     return militaryTime;
                 }
             } catch (NumberFormatException exception) {
-                log.error("Invalid number format: ", exception);
+                log.error("Invalid number format: {}", exception.getMessage());
             }
         }
 
@@ -82,7 +82,7 @@ public class SchedulerServiceImpl implements ScheduleService {
                 LocalTime localTime = LocalTime.parse(departure.toLowerCase(), formatter);
                 return localTime.getHour() * 100 + localTime.getMinute();
             } catch (DateTimeParseException exception) {
-                log.error("Invalid time format: ", exception);
+                log.error("Invalid time format: {}", exception.getMessage());
             }
         }
 

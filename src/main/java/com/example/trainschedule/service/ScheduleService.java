@@ -1,6 +1,6 @@
 package com.example.trainschedule.service;
 
-import com.example.trainschedule.model.Schedule;
+import com.example.trainschedule.entity.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

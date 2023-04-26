@@ -1,6 +1,6 @@
 package com.example.trainschedule.controller;
 
-import com.example.trainschedule.model.Schedule;
+import com.example.trainschedule.entity.Schedule;
 import com.example.trainschedule.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/go-train/schedule")
+@RequestMapping("/go-train-api/v1/schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
@@ -25,8 +25,8 @@ public class ScheduleController {
     }
 
     /*
-        I've decided to add pagination to improve efficiency in case working with large dataset.
-        Better user experience and flexibility.
+        I've decided to add pagination to improve efficiency in case working with large dataset,
+        better user experience and flexibility.
      */
     @GetMapping
     public Page<Schedule> getAllSchedules(@RequestParam(defaultValue = "0") int page,

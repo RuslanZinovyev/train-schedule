@@ -1,10 +1,9 @@
 package com.example.trainschedule;
 
-import com.example.trainschedule.model.Schedule;
+import com.example.trainschedule.entity.Schedule;
 import com.example.trainschedule.repository.ScheduleRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,6 +30,9 @@ public class TrainScheduleApplication {
         SpringApplication.run(TrainScheduleApplication.class, args);
     }
 
+    /*
+        I've created this method to seed the database with pre-configured values in JSON format
+     */
     @Bean
     CommandLineRunner init(ScheduleRepository scheduleRepository) {
         return args -> {
