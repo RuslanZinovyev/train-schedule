@@ -47,8 +47,11 @@ Otherwise, it returns the schedule that matches both line and departure time, if
 
 - [Ruslan Zinovyev](ruslan.zinovyev@gmail.com)
 
+## Documentation
+http://localhost:8080/swagger-ui/index.html
+
 ## TODO
 
 - This project was developed as a sample REST API.
-- Proper Exception handling should be added
+- Proper Exception handling should be added (I would consider Controller advice)
 
