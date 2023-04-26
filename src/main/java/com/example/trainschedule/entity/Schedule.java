@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
@@ -34,13 +33,13 @@ public class Schedule {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Schedule schedule = (Schedule) o;
-        return getId() != null && Objects.equals(getId(), schedule.getId());
+        return Objects.equals(id, schedule.id) && Objects.equals(line, schedule.line) && Objects.equals(departure, schedule.departure) && Objects.equals(arrival, schedule.arrival);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, line, departure, arrival);
     }
 }
