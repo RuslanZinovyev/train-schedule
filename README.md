@@ -52,6 +52,8 @@ http://localhost:8080/swagger-ui/index.html
 
 ## TODO
 
-- Write Custom exceptions
-- Proper Exception handling should be added (I would consider Controller advice)
+- Custom exceptions
+- Proper Exception handling should be added (Controller advice)
+- Security to protect API from unauthorized access
+- POST and PUT requests to add and modify schedules
 
