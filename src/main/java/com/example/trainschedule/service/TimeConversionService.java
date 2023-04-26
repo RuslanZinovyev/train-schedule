@@ -10,7 +10,8 @@ import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 /*
-   Maybe it's better to make this utility class, not a service.
+   Usually I am trying to avoid returning NULL since it's not a good practice, but in this scenario it's safe since we
+   need to return an empty body in this case.
  */
 @Slf4j
 @Service

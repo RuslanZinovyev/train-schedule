@@ -52,6 +52,6 @@ http://localhost:8080/swagger-ui/index.html
 
 ## TODO
 
-- This project was developed as a sample REST API.
+- Write Custom exceptions
 - Proper Exception handling should be added (I would consider Controller advice)
 
