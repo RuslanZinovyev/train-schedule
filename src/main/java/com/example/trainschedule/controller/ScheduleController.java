@@ -1,6 +1,7 @@
 package com.example.trainschedule.controller;
 
 import com.example.trainschedule.entity.Schedule;
+import com.example.trainschedule.dto.ResultDto;
 import com.example.trainschedule.service.ScheduleService;
 import com.example.trainschedule.service.TimeConversionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,14 +59,16 @@ public class ScheduleController {
                     @ApiResponse(responseCode = "400", description = "Invalid departure time format")
             })
     @GetMapping("/{line}")
-    public ResponseEntity<List<Schedule>> getScheduleByLineWithOptionalDeparture(
+    public ResponseEntity<ResultDto<List<Schedule>>> getScheduleByLineWithOptionalDeparture(
             @Parameter(description = "Train line") @PathVariable String line,
             @Parameter(description = "Departure time (optional)") @RequestParam(required = false) String departure) {
 
         List<Schedule> schedules = scheduleService.findByLine(line);
 
         if (schedules.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            ResultDto<List<Schedule>> errorResponse =
+                    new ResultDto<>("There are no schedules for this train line. Make sure than line is correct", schedules);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
 
         if (departure != null) {
@@ -74,10 +78,12 @@ public class ScheduleController {
                         .filter(schedule -> convertedDeparture.equals(schedule.getDeparture()))
                         .collect(Collectors.toList());
             } else {
-                return ResponseEntity.badRequest().build();
+                ResultDto<List<Schedule>> errorResponse = new ResultDto<>("Time format is not correct.", null);
+                return ResponseEntity.badRequest().body(errorResponse);
             }
         }
 
-        return ResponseEntity.ok(schedules);
+        ResultDto<List<Schedule>> successResponse = new ResultDto<>("Schedules", schedules);
+        return ResponseEntity.ok(successResponse);
     }
 }

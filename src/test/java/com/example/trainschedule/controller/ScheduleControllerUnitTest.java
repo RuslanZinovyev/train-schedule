@@ -1,6 +1,7 @@
 package com.example.trainschedule.controller;
 
 import com.example.trainschedule.entity.Schedule;
+import com.example.trainschedule.dto.ResultDto;
 import com.example.trainschedule.service.ScheduleService;
 import com.example.trainschedule.service.TimeConversionService;
 import org.junit.jupiter.api.Test;
@@ -54,11 +55,11 @@ class ScheduleControllerUnitTest {
 
         when(scheduleService.findByLine("Lakeshore")).thenReturn(scheduleList);
 
-        ResponseEntity<List<Schedule>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("Lakeshore", null);
+        ResponseEntity<ResultDto<List<Schedule>>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("Lakeshore", null);
 
         assertNotNull(responseEntity);
         assertEquals(200, responseEntity.getStatusCode().value());
-        assertEquals(2, Objects.requireNonNull(responseEntity.getBody()).size());
+        assertEquals(2, Objects.requireNonNull(responseEntity.getBody()).getData().size());
         verify(scheduleService, times(1)).findByLine("Lakeshore");
         verify(timeConversionService, never()).validateAndConvertDepartureTime(anyString());
     }
@@ -72,12 +73,12 @@ class ScheduleControllerUnitTest {
         when(scheduleService.findByLine("Lakeshore")).thenReturn(scheduleList);
         when(timeConversionService.validateAndConvertDepartureTime("800")).thenReturn(800);
 
-        ResponseEntity<List<Schedule>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("Lakeshore", "800");
+        ResponseEntity<ResultDto<List<Schedule>>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("Lakeshore", "800");
 
         assertNotNull(responseEntity);
         assertEquals(200, responseEntity.getStatusCode().value());
-        assertEquals(1, Objects.requireNonNull(responseEntity.getBody()).size());
-        assertEquals(schedule1, responseEntity.getBody().get(0));
+        assertEquals(1, Objects.requireNonNull(responseEntity.getBody()).getData().size());
+        assertEquals(schedule1, responseEntity.getBody().getData().get(0));
         verify(scheduleService, times(1)).findByLine("Lakeshore");
         verify(timeConversionService, times(1)).validateAndConvertDepartureTime("800");
     }
@@ -86,11 +87,11 @@ class ScheduleControllerUnitTest {
     public void getScheduleByLineWithOptionalDepartureNotFound() {
         when(scheduleService.findByLine("InvalidLine")).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<Schedule>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("InvalidLine", null);
+        ResponseEntity<ResultDto<List<Schedule>>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("InvalidLine", null);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-        assertNull(responseEntity.getBody());
+        assertEquals(0, Objects.requireNonNull(responseEntity.getBody()).getData().size());
         verify(scheduleService, times(1)).findByLine("InvalidLine");
         verify(timeConversionService, never()).validateAndConvertDepartureTime(anyString());
     }
@@ -104,7 +105,7 @@ class ScheduleControllerUnitTest {
         when(scheduleService.findByLine("Lakeshore")).thenReturn(scheduleList);
         when(timeConversionService.validateAndConvertDepartureTime("invalid")).thenReturn(null);
 
-        ResponseEntity<List<Schedule>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("Lakeshore", "invalid");
+        ResponseEntity<ResultDto<List<Schedule>>> responseEntity = scheduleController.getScheduleByLineWithOptionalDeparture("Lakeshore", "invalid");
 
         assertNotNull(responseEntity);
         assertEquals(400, responseEntity.getStatusCode().value());
