@@ -9,12 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -22,10 +17,13 @@ import java.util.Optional;
 public class SchedulerServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final TimeConversionService timeConversionService;
 
     @Autowired
-    public SchedulerServiceImpl(ScheduleRepository scheduleRepository) {
+    public SchedulerServiceImpl(ScheduleRepository scheduleRepository,
+                                TimeConversionService timeConversionService) {
         this.scheduleRepository = scheduleRepository;
+        this.timeConversionService = timeConversionService;
     }
 
     @Override
@@ -43,49 +41,12 @@ public class SchedulerServiceImpl implements ScheduleService {
     @Override
     @Cacheable(value = "schedulesByLineAndDeparture", key = "#line + #departure")
     public Optional<Schedule> findByLineAndDeparture(String line, String departure) {
-        Integer convertedDeparture = validateAndConvertDepartureTime(departure);
+        Integer convertedDeparture = timeConversionService.validateAndConvertDepartureTime(departure);
 
         if (convertedDeparture == null) {
             throw new IllegalArgumentException("Invalid departure time format");
         }
 
         return scheduleRepository.findByLineAndDeparture(line, convertedDeparture);
-    }
-
-    private Integer validateAndConvertDepartureTime(String departure) {
-        if (departure == null || departure.isEmpty()) {
-            return null;
-        }
-
-        // Check for 24-hour format
-        if (Character.isDigit(departure.charAt(0))) {
-            try {
-                int militaryTime = Integer.parseInt(departure);
-                int hours = militaryTime / 100;
-                int minutes = militaryTime % 100;
-
-                if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
-                    return militaryTime;
-                }
-            } catch (NumberFormatException exception) {
-                log.error("Invalid number format: {}", exception.getMessage());
-            }
-        }
-
-        // Check for 12-hour format
-        if (departure.toLowerCase().endsWith("am") || departure.toLowerCase().endsWith("pm")) {
-            try {
-                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                        .parseCaseInsensitive()
-                        .appendPattern("h:mma")
-                        .toFormatter(Locale.US);
-                LocalTime localTime = LocalTime.parse(departure.toLowerCase(), formatter);
-                return localTime.getHour() * 100 + localTime.getMinute();
-            } catch (DateTimeParseException exception) {
-                log.error("Invalid time format: {}", exception.getMessage());
-            }
-        }
-
-        return null;
     }
 }

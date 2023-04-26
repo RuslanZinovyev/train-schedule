@@ -24,6 +24,8 @@ import static org.mockito.Mockito.*;
 class SchedulerServiceUnitTest {
     @Mock
     private ScheduleRepository scheduleRepository;
+    @Mock
+    private TimeConversionService timeConversionService;
 
     @InjectMocks
     private SchedulerServiceImpl schedulerServiceImpl;
@@ -62,7 +64,7 @@ class SchedulerServiceUnitTest {
     @Test
     public void findByLineAndDeparture() {
         Schedule schedule = new Schedule(1L, "Lakeshore", 800, 900);
-
+        when(timeConversionService.validateAndConvertDepartureTime("800")).thenReturn(800);
         when(scheduleRepository.findByLineAndDeparture("Lakeshore", 800)).thenReturn(Optional.of(schedule));
 
         Optional<Schedule> result = schedulerServiceImpl.findByLineAndDeparture("Lakeshore", "800");
@@ -70,16 +72,19 @@ class SchedulerServiceUnitTest {
         assertTrue(result.isPresent());
         assertEquals(schedule.getId(), result.get().getId());
         verify(scheduleRepository, times(1)).findByLineAndDeparture("Lakeshore", 800);
+        verify(timeConversionService, times(1)).validateAndConvertDepartureTime(any());
     }
 
     @Test
-    public void findByLineAndDeparture_notFound() {
+    public void findByLineAndDepartureNotFound() {
+        when(timeConversionService.validateAndConvertDepartureTime("800")).thenReturn(800);
         when(scheduleRepository.findByLineAndDeparture("NonExistentLine", 800)).thenReturn(Optional.empty());
 
         Optional<Schedule> result = schedulerServiceImpl.findByLineAndDeparture("NonExistentLine", "800");
 
         assertFalse(result.isPresent());
         verify(scheduleRepository, times(1)).findByLineAndDeparture("NonExistentLine", 800);
+        verify(timeConversionService, times(1)).validateAndConvertDepartureTime(any());
     }
 
 }
