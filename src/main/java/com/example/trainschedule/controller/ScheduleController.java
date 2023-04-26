@@ -64,7 +64,7 @@ public class ScheduleController {
         List<Schedule> schedules = scheduleService.findByLine(line);
 
         if (schedules.isEmpty()) {
-            return ResponseEntity.notFound().header("message", "There is no schedules for this train line").build();
+            return ResponseEntity.notFound().build();
         }
 
         if (departure != null) {
