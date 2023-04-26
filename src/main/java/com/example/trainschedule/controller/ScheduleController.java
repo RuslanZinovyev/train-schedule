@@ -67,7 +67,7 @@ public class ScheduleController {
 
         if (schedules.isEmpty()) {
             ResultDto<List<Schedule>> errorResponse =
-                    new ResultDto<>("There are no schedules for this train line. Make sure than line is correct", schedules);
+                    new ResultDto<>("There are no schedules for this train line. Make sure that line is correct", schedules);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
 
