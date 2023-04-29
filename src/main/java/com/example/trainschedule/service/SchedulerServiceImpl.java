@@ -43,7 +43,7 @@ public class SchedulerServiceImpl implements ScheduleService {
     @Override
     @Cacheable(value = "schedulesByLineAndDeparture", key = "#line + #departure")
     public Optional<Schedule> findByLineAndDeparture(String line, String departure) {
-        log.info("Fetching schedules from the database for line: {} and optional departute {}", line, departure);
+        log.info("Fetching schedules from the database for line: {} and optional departure {}", line, departure);
         Integer convertedDeparture = timeConversionService.validateAndConvertDepartureTime(departure);
 
         if (convertedDeparture == null) {
